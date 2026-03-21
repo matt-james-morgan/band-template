@@ -1,0 +1,111 @@
+import React, { useState, useEffect } from "react";
+import { cn } from "@/lib/utils";
+import { bandConfig } from "@/config/bandConfig";
+
+interface HeaderProps {
+  className?: string;
+}
+
+const Header: React.FC<HeaderProps> = ({ className }) => {
+  const [isScrolled, setIsScrolled] = useState(false);
+  const [isHidden, setIsHidden] = useState(false);
+  const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
+  const lastScrollY = React.useRef(0);
+
+  useEffect(() => {
+    const handleScroll = () => {
+      const y = window.scrollY;
+      setIsScrolled(y > 10);
+      setIsHidden(y > 100 && y > lastScrollY.current);
+      lastScrollY.current = y;
+    };
+
+    window.addEventListener("scroll", handleScroll, { passive: true });
+    return () => window.removeEventListener("scroll", handleScroll);
+  }, []);
+
+  const scrollToSection = (href: string) => {
+    const id = href.replace("#", "");
+    if (!id) {
+      window.scrollTo({ top: 0, behavior: "smooth" });
+      return;
+    }
+    const element = document.getElementById(id);
+    if (element) {
+      window.scrollTo({ top: element.offsetTop - 80, behavior: "smooth" });
+    }
+  };
+
+  return (
+    <header
+      className={cn(
+        "fixed top-0 left-0 right-0 z-50 transition-all duration-500",
+        isHidden ? "-translate-y-full" : "translate-y-0",
+        isScrolled
+          ? "py-3 bg-background/95 backdrop-blur-md border-b border-border/20"
+          : "py-5 bg-transparent",
+        className
+      )}
+    >
+      <div className="container mx-auto px-4 md:px-6 flex items-center justify-end">
+        <div className="hidden md:flex items-center space-x-8">
+          {bandConfig.nav.map((link) => (
+            <button
+              key={link.label}
+              className="text-xs uppercase tracking-widest font-light text-foreground/60 hover:text-foreground transition-colors"
+              onClick={() => scrollToSection(link.href)}
+            >
+              {link.label}
+            </button>
+          ))}
+        </div>
+
+        <button
+          className="md:hidden flex items-center"
+          onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}
+          aria-label="Toggle menu"
+        >
+          <span className={cn("block w-6 transition-all duration-300", isMobileMenuOpen ? "opacity-0" : "opacity-100")}>
+            <span className="block w-6 h-0.5 bg-foreground mb-1.5" />
+            <span className="block w-6 h-0.5 bg-foreground mb-1.5" />
+            <span className="block w-4 h-0.5 bg-foreground" />
+          </span>
+        </button>
+      </div>
+
+      {/* Mobile menu */}
+      <div
+        className={cn(
+          "fixed inset-0 bg-background z-40 flex flex-col pt-24 px-6 transition-transform duration-500 ease-in-out transform md:hidden",
+          isMobileMenuOpen ? "translate-x-0" : "translate-x-full"
+        )}
+      >
+        <button
+          className="absolute top-5 right-5 p-2"
+          onClick={() => setIsMobileMenuOpen(false)}
+          aria-label="Close menu"
+        >
+          <span className="block w-6 h-0.5 bg-foreground transform rotate-45 translate-y-0.5" />
+          <span className="block w-6 h-0.5 bg-foreground transform -rotate-45" />
+        </button>
+
+        <nav className="flex flex-col space-y-6 text-lg">
+          {bandConfig.nav.map((link) => (
+            <button
+              key={link.label}
+              className="text-left text-xs uppercase tracking-widest font-light text-foreground/60 hover:text-foreground transition-colors"
+              onClick={() => {
+                scrollToSection(link.href);
+                setIsMobileMenuOpen(false);
+              }}
+            >
+              {link.label}
+            </button>
+          ))}
+        </nav>
+      </div>
+    </header>
+  );
+};
+
+export default Header;
