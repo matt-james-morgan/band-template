@@ -11,29 +11,28 @@ const videos: { id: string; title: string }[] = [];
 
 const Video: React.FC<VideoProps> = ({ className }) => {
   return (
-    <section id="media" className={cn("py-20 bg-muted", className)}>
+    <section id="media" className={cn("py-16 md:py-20 bg-muted", className)}>
       <div className="container mx-auto px-4 md:px-6">
-        <h2 className="text-3xl md:text-4xl font-serif mb-12 text-center">
+        <h2 className="text-3xl md:text-4xl font-serif mb-8 md:mb-12 text-center">
           Media
         </h2>
 
         {videos.length > 0 ? (
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8 max-w-7xl mx-auto">
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 md:gap-8 max-w-7xl mx-auto">
             {videos.map((video, index) => (
               <div
                 key={index}
                 className="bg-background rounded-lg shadow-lg overflow-hidden hover:shadow-xl transition-shadow"
               >
                 <div
-                  className="relative w-full"
-                  style={{ paddingBottom: "56.25%" }}
-                >
+                  className="relative w-full aspect-video">
                   <iframe
                     className="absolute top-0 left-0 w-full h-full"
                     src={`https://www.youtube.com/embed/${video.id}`}
                     title={video.title}
                     allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
                     allowFullScreen
+                  loading="lazy"
                   />
                 </div>
               </div>

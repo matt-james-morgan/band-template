@@ -50,15 +50,15 @@ const StreamingLinks: React.FC<StreamingLinksProps> = ({ className }) => {
   const activePlatforms = platforms.filter((p) => bandConfig.streaming[p.key]);
 
   return (
-    <section className={cn("py-24 bg-muted", className)}>
+    <section className={cn("py-16 md:py-24 bg-muted", className)}>
       <div className="container mx-auto px-4 md:px-6">
         <FadeIn>
-          <p className="text-xs uppercase tracking-[0.3em] text-foreground/40 mb-12 text-center font-light">
+          <p className="text-xs uppercase tracking-[0.3em] text-foreground/40 mb-8 md:mb-12 text-center font-light">
             Listen
           </p>
         </FadeIn>
         <FadeIn delay={100}>
-          <div className="flex justify-center items-center gap-12 flex-wrap">
+          <div className="flex justify-center items-center gap-6 sm:gap-12 flex-wrap">
             {activePlatforms.map((p) => (
               <a
                 key={p.name}
@@ -66,7 +66,7 @@ const StreamingLinks: React.FC<StreamingLinksProps> = ({ className }) => {
                 target="_blank"
                 rel="noopener noreferrer"
                 aria-label={p.name}
-                className="text-foreground/40 hover:text-foreground transition-all duration-200 hover:-translate-y-1 transform"
+                className="p-2 text-foreground/40 hover:text-foreground transition-all duration-200 hover:-translate-y-1 transform"
                 title={p.name}
               >
                 {p.icon}
